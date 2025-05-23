@@ -1,6 +1,9 @@
 package virtuoel.no_fog.mixin.client.compat119plus;
 
+import net.minecraft.client.render.Fog;
+import org.joml.Vector4f;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -14,6 +17,7 @@ import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.FogShape;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import virtuoel.no_fog.NoFogClient;
 import virtuoel.no_fog.util.FogToggleType;
 import virtuoel.no_fog.util.ReflectionUtils;
@@ -21,18 +25,18 @@ import virtuoel.no_fog.util.ReflectionUtils;
 @Mixin(value = BackgroundRenderer.class, priority = 910)
 public abstract class BackgroundRendererMixin
 {
-	@Inject(method = "applyFog", at = @At("RETURN"))
-	private static void applyFogModifyDistance(Camera camera, BackgroundRenderer.FogType fogType, float viewDistance, boolean thickFog, float tickDelta, CallbackInfo info)
+	@Inject(method = "applyFog", at = @At("RETURN"),cancellable = true)
+	private static void applyFogModifyDistance(Camera camera, BackgroundRenderer.FogType fogType, Vector4f color, float viewDistance, boolean thickenFog, float tickDelta, CallbackInfoReturnable<Fog> cir)
 	{
 		final CameraSubmersionType cameraSubmersionType = camera.getSubmersionType();
 		final Entity entity = camera.getFocusedEntity();
 		
-		if (!NoFogClient.isToggleEnabled(getFogType(fogType, thickFog, cameraSubmersionType, entity), entity))
+		if (!NoFogClient.isToggleEnabled(getFogType(fogType, thickenFog, cameraSubmersionType, entity), entity))
 		{
-			RenderSystem.setShaderFogStart(NoFogClient.FOG_START);
-			RenderSystem.setShaderFogEnd(NoFogClient.FOG_END);
-			RenderSystem.setShaderFogShape(FogShape.CYLINDER);
+			Fog fog = cir.getReturnValue();
+			cir.setReturnValue(new Fog(NoFogClient.FOG_START, NoFogClient.FOG_END, FogShape.CYLINDER, color.x, color.y, color.z, color.w));
 		}
+
 	}
 	
 	@Unique
