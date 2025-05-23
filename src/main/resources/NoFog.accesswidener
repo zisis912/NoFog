@@ -1,6 +1,0 @@
-accessWidener v2 named
-
-accessible field net/minecraft/client/render/Fog start F
-accessible field net/minecraft/client/render/Fog end F
-accessible field net/minecraft/client/render/Fog shape Lnet/minecraft/client/render/FogShape;
-
