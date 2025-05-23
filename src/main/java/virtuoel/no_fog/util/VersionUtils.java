@@ -18,14 +18,7 @@ public class VersionUtils
 	{
 		final int[][] ranges =
 		{
-			{1, 14, 4},
-			{1, 15, 2},
-			{1, 16, 5},
-			{1, 17, 1},
-			{1, 18, 2},
-			{1, 19, 4},
-			{1, 20, 5},
-			{1, 21, 0},
+			{1, 21, 4},
 		};
 		
 		final String prefix = ".compat%s%s";
