@@ -277,7 +277,7 @@ public class ReflectionUtils
 	{
 		if (GET_BIOME != null)
 		{
-			final World world = entity.getEntityWorld();
+			final World world = entity.getWorld();
 			final Vec3d pos = entity.getPos();
 			final BlockPos blockPos = new BlockPos(MathHelper.floor(pos.getX()), MathHelper.floor(pos.getY()), MathHelper.floor(pos.getZ()));
 			

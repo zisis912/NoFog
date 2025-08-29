@@ -2,6 +2,7 @@ package virtuoel.no_fog.mixin.client.compat119plus;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.render.fog.AtmosphericFogModifier;
+import net.minecraft.client.render.fog.FogData;
 import net.minecraft.client.render.fog.FogModifier;
 import net.minecraft.client.render.fog.FogRenderer;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,18 +18,21 @@ import virtuoel.no_fog.util.FogToggleType;
 import virtuoel.no_fog.util.ReflectionUtils;
 
 @Mixin(value = FogRenderer.class, priority = 910)
-public abstract class BackgroundRendererMixin
+public abstract class FogRendererMixin
 {
 	@Redirect(method = "applyFog(Lnet/minecraft/client/render/Camera;IZLnet/minecraft/client/render/RenderTickCounter;FLnet/minecraft/client/world/ClientWorld;)Lorg/joml/Vector4f;", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/fog/FogModifier;shouldApply(Lnet/minecraft/block/enums/CameraSubmersionType;Lnet/minecraft/entity/Entity;)Z"))
-	private boolean applyFogModifyDistance(FogModifier instance, CameraSubmersionType cameraSubmersionType, Entity entity, @Local(argsOnly = true) boolean thick)
+	private boolean shouldApplyFog(FogModifier instance, CameraSubmersionType cameraSubmersionType, Entity entity, @Local(argsOnly = true) boolean thick, @Local FogData fogData)
 	{
-//		final CameraSubmersionType cameraSubmersionType = camera.getSubmersionType();
-//		final Entity entity = camera.getFocusedEntity();
-
 		if (!NoFogClient.isToggleEnabled(getFogType(instance, thick, cameraSubmersionType, entity), entity))
 		{
 //			Fog fog = cir.getReturnValue();
 //			cir.setReturnValue(new Fog(NoFogClient.FOG_START, NoFogClient.FOG_END, FogShape.CYLINDER, color.x, color.y, color.z, color.w));
+			fogData.environmentalStart = NoFogClient.FOG_START;
+			fogData.environmentalEnd = NoFogClient.FOG_END;
+			fogData.renderDistanceStart = NoFogClient.FOG_START;
+			fogData.skyEnd = NoFogClient.FOG_END;
+			fogData.cloudEnd= NoFogClient.FOG_END;
+			fogData.renderDistanceEnd= NoFogClient.FOG_END;
 			return false;
 		}
 
