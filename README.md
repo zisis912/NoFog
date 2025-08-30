@@ -1,3 +1,3 @@
-Port of NoFog for modern versions. I only ported 1.21.4, if anybody needs more versions and im not bored make an issue and ill do them
+Port of NoFog for modern versions. I only ported 1.21.4 and 1.21.6 , if anybody needs more versions and im not bored make an issue and ill do them
 
 Check releases page for [download](https://github.com/zisis912/NoFog/releases)
